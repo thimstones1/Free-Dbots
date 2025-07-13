@@ -1,0 +1,146 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable id="stake">stake</variable>
+    <variable id="loss_count">loss_count</variable>
+    <variable id="trade_type">trade_type</variable>
+  </variables>
+  <block type="bot_start" id="start" deletable="false" x="50" y="50"></block>
+  <block type="procedures_defnoreturn" id="main_loop" x="50" y="150">
+    <mutation></mutation>
+    <field name="NAME">main_loop</field>
+    <statement name="STACK">
+      <block type="controls_if" id="check_loss">
+        <value name="IF0">
+          <block type="logic_compare" id="loss_check">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get" id="get_loss_count">
+                <field name="VAR" id="loss_count">loss_count</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_number" id="zero">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="trade" id="trade_over_0">
+            <field name="CONDITION">DIGITOVER</field>
+            <field name="DIGIT">0</field>
+          </block>
+        </statement>
+        <next>
+          <block type="controls_if" id="check_loss_1">
+            <value name="IF0">
+              <block type="logic_compare" id="loss_check_1">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="variables_get" id="get_loss_count_2">
+                    <field name="VAR" id="loss_count">loss_count</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="one">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="trade" id="trade_over_5">
+                <field name="CONDITION">DIGITOVER</field>
+                <field name="DIGIT">5</field>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="on_strategy_finish" id="on_finish" x="50" y="500">
+    <statement name="FINISH_STACK">
+      <block type="reset_decorations" id="reset_dec" />
+    </statement>
+  </block>
+  <block type="after_purchase" id="after_purchase_block" x="500" y="50">
+    <statement name="STATEMENT">
+      <block type="controls_if" id="if_win_or_lose">
+        <value name="IF0">
+          <block type="logic_compare" id="compare_result">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="last_trade_result" id="trade_result"></block>
+            </value>
+            <value name="B">
+              <block type="text" id="text_win">
+                <field name="TEXT">win</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="variables_set" id="reset_loss">
+            <field name="VAR" id="loss_count">loss_count</field>
+            <value name="VALUE">
+              <block type="math_number" id="reset_to_zero">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+            <next>
+              <block type="set_stake" id="reset_stake">
+                <value name="AMOUNT">
+                  <block type="variables_get" id="get_base_stake">
+                    <field name="VAR" id="stake">stake</field>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <else>
+          <block type="variables_set" id="increase_loss">
+            <field name="VAR" id="loss_count">loss_count</field>
+            <value name="VALUE">
+              <block type="math_number" id="set_one">
+                <field name="NUM">1</field>
+              </block>
+            </value>
+            <next>
+              <block type="multiply_stake" id="martingale">
+                <value name="MULTIPLIER">
+                  <block type="math_number" id="martingale_multiplier">
+                    <field name="NUM">2.1</field>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </else>
+      </block>
+    </statement>
+  </block>
+  <block type="before_purchase" id="before_purchase_block" x="500" y="300">
+    <statement name="STATEMENT">
+      <block type="call_function" id="call_main_loop">
+        <mutation name="main_loop"></mutation>
+      </block>
+    </statement>
+  </block>
+  <block type="variables_set" id="set_base_stake" x="500" y="500">
+    <field name="VAR" id="stake">stake</field>
+    <value name="VALUE">
+      <block type="math_number" id="base_stake_value">
+        <field name="NUM">1</field>
+      </block>
+    </value>
+  </block>
+  <block type="set_stake" id="stake_initial" x="500" y="600">
+    <value name="AMOUNT">
+      <block type="variables_get" id="get_stake_var">
+        <field name="VAR" id="stake">stake</field>
+      </block>
+    </value>
+  </block>
+</xml>
